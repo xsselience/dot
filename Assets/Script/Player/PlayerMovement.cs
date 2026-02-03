@@ -49,8 +49,20 @@ public class PlayerMovement : MonoBehaviour
 
         float move = 0f;
 
-        if (Keyboard.current.aKey.isPressed) move -= 1f;
-        if (Keyboard.current.dKey.isPressed) move += 1f;
+        if (Keyboard.current.aKey.isPressed)
+        {
+            move -= 1f;
+            Vector3 scale = transform.localScale;
+            scale.x = -1;
+            transform.localScale = scale;
+        }
+        if (Keyboard.current.dKey.isPressed)
+        {
+            move += 1f;
+            Vector3 scale = transform.localScale;
+            scale.x = 1;
+            transform.localScale = scale;
+        }
 
         body.velocity = new Vector2(move * moveSpeed, body.velocity.y);
     }

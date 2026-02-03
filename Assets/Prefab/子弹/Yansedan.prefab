@@ -162,3 +162,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifeTime: 3
+  currentColor: {r: 1, g: 1, b: 1, a: 0}
