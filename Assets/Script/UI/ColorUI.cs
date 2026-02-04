@@ -1,30 +1,87 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class ColorUI : MonoBehaviour
 {
-    public PlayerShoot player;           // �� PlayerShoot
-    public Image currentColorImage;      // ��ǰ��ɫ��ʾ��
+    public PlayerShoot player;
 
-    public void SelectRed() { SetColor(ColorType.Red); }
-    public void SelectBlue() { SetColor(ColorType.Blue); }
-    public void SelectGreen() { SetColor(ColorType.Green); }
+    [Header("颜色 UI（顺序要和 ColorType 对应）")]
+    public Image[] colorImages;
+    public ColorType[] colorTypes;
 
-    private void SetColor(ColorType colorType)
+    [Header("高亮设置")]
+    public Color outlineColor = Color.white;
+    public Vector2 outlineDistance = new Vector2(6f, -6f);
+
+    private int currentIndex = 0;
+
+    void Start()
     {
-        if (player != null)
-        {
-            player.colorType = colorType;          
-            player.currentColor = GetColor(colorType); // ͬ����ʾ��ɫ
-        }
+        InitUI();
+        UpdateSelection();
+    }
 
-        if (currentColorImage != null)
+    void Update()
+    {
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+
+        if (scroll > 0f)
         {
-            currentColorImage.color = GetColor(colorType); // ���� UI ��ʾ
+            currentIndex = (currentIndex + 1) % colorImages.Length;
+            UpdateSelection();
+        }
+        else if (scroll < 0f)
+        {
+            currentIndex--;
+            if (currentIndex < 0)
+                currentIndex = colorImages.Length - 1;
+
+            UpdateSelection();
         }
     }
 
-    private Color GetColor(ColorType type)
+    void InitUI()
+    {
+        for (int i = 0; i < colorImages.Length; i++)
+        {
+            // 设置每个颜色块本身的颜色
+            colorImages[i].color = GetColor(colorTypes[i]);
+
+            // 确保有 Outline 组件
+            Outline outline = colorImages[i].GetComponent<Outline>();
+            if (outline == null)
+                outline = colorImages[i].gameObject.AddComponent<Outline>();
+
+            outline.effectColor = outlineColor;
+            outline.effectDistance = outlineDistance;
+            outline.enabled = false;
+        }
+    }
+
+    void UpdateSelection()
+    {
+        ColorType type = colorTypes[currentIndex];
+
+        // 通知玩家当前颜色
+        if (player != null)
+        {
+            player.colorType = type;
+        }
+
+        // 更新高亮
+        UpdateHighlight();
+    }
+
+    void UpdateHighlight()
+    {
+        for (int i = 0; i < colorImages.Length; i++)
+        {
+            Outline outline = colorImages[i].GetComponent<Outline>();
+            outline.enabled = (i == currentIndex);
+        }
+    }
+
+    Color GetColor(ColorType type)
     {
         switch (type)
         {

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 public class Obstacle : MonoBehaviour
 {
+    private WordBlockView view;
     public ColorType colorType = ColorType.Red;  // 障碍物颜色
     private SpriteRenderer sr;
 
@@ -9,6 +10,13 @@ public class Obstacle : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         if (sr != null)
             sr.color = GetColor(colorType);
+
+        view = GetComponent<WordBlockView>();
+
+        if (view == null)
+        Debug.LogError("WordBlockView missing!");
+        
+        UpdateColor();
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -32,6 +40,7 @@ public class Obstacle : MonoBehaviour
         {
             // 异色 → 叠加 / 混合成新颜色
             colorType = MixColors(colorType, bullet.colorType);
+            UpdateColor();
 
             if (sr != null)
                 sr.color = GetColor(colorType);//111行
@@ -90,6 +99,12 @@ public class Obstacle : MonoBehaviour
         // 默认保留 a
         return a;
     }
+
+    void UpdateColor()
+{
+    if (view != null)
+        view.ApplyColor(GetColor(colorType));
+}
 
     bool IsBase(ColorType c) => c == ColorType.Red || c == ColorType.Green || c == ColorType.Blue;
     bool IsMix(ColorType c) => c == ColorType.Yellow || c == ColorType.Purple || c == ColorType.Cyan;
