@@ -8,6 +8,10 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeed = 5f;
     public float jumpHigh = 20f;
     public float secondJumptime = 0.5f;
+    [Header("Jump Feel")]
+    public float fallMultiplier = 2.5f;       // 下落更快
+    public float lowJumpMultiplier = 2f;      // 松手提前下坠
+  
 
     [Header("发射点")]
     public Transform fashe; // 发射点
@@ -60,7 +64,28 @@ public class PlayerMovement : MonoBehaviour
                 secondJumpTime = 0f;
             }
         }
+        CheckOutOfScreen();
     }
+
+    void CheckOutOfScreen()
+    {
+    Camera cam = Camera.main;
+
+    float camHalfWidth = cam.orthographicSize * Screen.width / Screen.height;
+
+    float leftBorder = cam.transform.position.x - camHalfWidth;
+
+    if (transform.position.x < leftBorder)
+    {
+        Die();
+    }
+    }
+
+    void Die()
+    {
+    Debug.Log("Player Dead");
+    }
+
 
     void FixedUpdate()
     {
@@ -83,6 +108,15 @@ public class PlayerMovement : MonoBehaviour
         {
             sr.flipX = true;
             FlipFashe(false);
+        }
+        // 改善跳跃手感
+        if (body.velocity.y < 0)
+        {
+        body.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
+        }
+        else if (body.velocity.y > 0 && !Keyboard.current.spaceKey.isPressed)
+        {
+        body.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.fixedDeltaTime;
         }
     }
 

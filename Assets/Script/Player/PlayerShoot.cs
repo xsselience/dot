@@ -27,27 +27,35 @@ public class PlayerShoot : MonoBehaviour
 
     void Shoot()
     {
-        if (bulletPrefab == null || playerMovement.fashe == null) return;
+    if (bulletPrefab == null || playerMovement.fashe == null) return;
 
-        // 子弹方向根据角色朝向
-        Vector2 shootDir = playerMovement.FaceRight ? Vector2.right : Vector2.left;
+    // 获取鼠标世界位置
+    Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+    mouseWorldPos.z = 0f;
 
-        GameObject bullet = Instantiate(bulletPrefab, playerMovement.fashe.position, Quaternion.identity);
-        Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-        Bullet bulletScript = bullet.GetComponent<Bullet>();
+    // 计算子弹方向（朝鼠标）
+    Vector2 shootDir = (mouseWorldPos - playerMovement.fashe.position).normalized;
 
-        if (bulletScript != null)
-        {
-            bulletScript.colorType = colorType;
-            bulletScript.currentColor = GetColor(colorType);
+    GameObject bullet = Instantiate(bulletPrefab, playerMovement.fashe.position, Quaternion.identity);
+    Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+    Bullet bulletScript = bullet.GetComponent<Bullet>();
 
-            SpriteRenderer sr = bullet.GetComponent<SpriteRenderer>();
-            if (sr != null)
-                sr.color = bulletScript.currentColor;
-        }
+    if (bulletScript != null)
+    {
+        bulletScript.colorType = colorType;
+        bulletScript.currentColor = GetColor(colorType);
 
-        if (rb != null)
-            rb.velocity = shootDir * bulletSpeed;
+        SpriteRenderer sr = bullet.GetComponent<SpriteRenderer>();
+        if (sr != null)
+            sr.color = bulletScript.currentColor;
+    }
+
+    if (rb != null)
+        rb.velocity = shootDir * bulletSpeed;
+
+    // 让子弹旋转朝向射击方向
+    float angle = Mathf.Atan2(shootDir.y, shootDir.x) * Mathf.Rad2Deg;
+    bullet.transform.rotation = Quaternion.Euler(0, 0, angle);
     }
 
     Color GetColor(ColorType type)
