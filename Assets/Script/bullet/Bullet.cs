@@ -2,7 +2,7 @@
 
 public class Bullet : MonoBehaviour
 {
-    public ColorType colorType;  
+    public ColorType colorType;
     public float lifeTime = 2f;
 
     [HideInInspector]
@@ -43,8 +43,8 @@ public class Bullet : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        // 碰到地面或障碍物就销毁
-        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Obstacle"))
+        if (collision.gameObject.CompareTag("Ground") ||
+            collision.gameObject.CompareTag("Obstacle"))
         {
             Destroy(gameObject);
         }

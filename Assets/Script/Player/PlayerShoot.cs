@@ -27,36 +27,52 @@ public class PlayerShoot : MonoBehaviour
 
     void Shoot()
     {
-    if (bulletPrefab == null || playerMovement.fashe == null) return;
+        if (bulletPrefab == null || playerMovement.fashe == null) return;
 
-    // 获取鼠标世界位置
-    Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-    mouseWorldPos.z = 0f;
+        // 鼠标世界坐标
+        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        mouseWorldPos.z = 0f;
 
-    // 计算子弹方向（朝鼠标）
-    Vector2 shootDir = (mouseWorldPos - playerMovement.fashe.position).normalized;
+        // 鼠标相对角色的位置
+        float dirX = mouseWorldPos.x - transform.position.x;
 
-    GameObject bullet = Instantiate(bulletPrefab, playerMovement.fashe.position, Quaternion.identity);
-    Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-    Bullet bulletScript = bullet.GetComponent<Bullet>();
+        // 角色朝向
+        bool faceRight = playerMovement.FaceRight;
 
-    if (bulletScript != null)
-    {
-        bulletScript.colorType = colorType;
-        bulletScript.currentColor = GetColor(colorType);
+        // ⭐ 核心判断：鼠标是否在角色正前方
+        if (faceRight && dirX < 0) return; // 面右，但点在左边
+        if (!faceRight && dirX > 0) return; // 面左，但点在右边
 
-        SpriteRenderer sr = bullet.GetComponent<SpriteRenderer>();
-        if (sr != null)
-            sr.color = bulletScript.currentColor;
+        // 计算射击方向
+        Vector2 shootDir = (mouseWorldPos - playerMovement.fashe.position).normalized;
+
+        GameObject bullet = Instantiate(
+            bulletPrefab,
+            playerMovement.fashe.position,
+            Quaternion.identity
+        );
+
+        Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+        Bullet bulletScript = bullet.GetComponent<Bullet>();
+
+        if (bulletScript != null)
+        {
+            bulletScript.colorType = colorType;
+            bulletScript.currentColor = GetColor(colorType);
+
+            SpriteRenderer sr = bullet.GetComponent<SpriteRenderer>();
+            if (sr != null)
+                sr.color = bulletScript.currentColor;
+        }
+
+        if (rb != null)
+            rb.velocity = shootDir * bulletSpeed;
+
+        // 子弹朝向
+        float angle = Mathf.Atan2(shootDir.y, shootDir.x) * Mathf.Rad2Deg;
+        bullet.transform.rotation = Quaternion.Euler(0, 0, angle);
     }
 
-    if (rb != null)
-        rb.velocity = shootDir * bulletSpeed;
-
-    // 让子弹旋转朝向射击方向
-    float angle = Mathf.Atan2(shootDir.y, shootDir.x) * Mathf.Rad2Deg;
-    bullet.transform.rotation = Quaternion.Euler(0, 0, angle);
-    }
 
     Color GetColor(ColorType type)
     {

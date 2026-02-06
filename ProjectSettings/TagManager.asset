@@ -6,6 +6,13 @@ TagManager:
   tags:
   - Ground
   - Obstacle
+  - ground
+  - BombPickup
+  - Enemy
+  - ExplosionFX
+  - Bullet
+  - HealthBar
+  - Tilemap
   layers:
   - Default
   - TransparentFX
@@ -17,7 +24,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - Background
   - 
   - 
   - 
@@ -45,4 +52,7 @@ TagManager:
     locked: 0
   - name: 'colour block '
     uniqueID: 3305090505
+    locked: 0
+  - name: background
+    uniqueID: 185776697
     locked: 0

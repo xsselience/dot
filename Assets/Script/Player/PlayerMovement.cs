@@ -4,101 +4,111 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody2D), typeof(BoxCollider2D))]
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("移动 & 跳跃参数")]
+    [Header("移动")]
     public float moveSpeed = 5f;
+
+    [Header("跳跃")]
     public float jumpHigh = 20f;
-    public float secondJumptime = 0.5f;
+    public float secondJumpTimeLimit = 0.5f;
+
     [Header("Jump Feel")]
-    public float fallMultiplier = 2.5f;       // 下落更快
-    public float lowJumpMultiplier = 2f;      // 松手提前下坠
-  
+    public float fallMultiplier = 2.5f;
+    public float lowJumpMultiplier = 2f;
+
+    [Header("落地检测")]
+    public Transform groundCheck;
+    public Vector2 groundCheckSize = new Vector2(0.6f, 0.1f);
+    public LayerMask groundLayer;
 
     [Header("发射点")]
-    public Transform fashe; // 发射点
+    public Transform fashe;
 
     public bool IsGrounded => isGrounded;
     public bool FaceRight => sr != null ? !sr.flipX : true;
     public float MoveInput { get; private set; }
 
-    private Rigidbody2D body;
+    private Rigidbody2D rb;
     private SpriteRenderer sr;
 
     private bool isGrounded;
-    private int jumpCount = 0;
-    private float secondJumpTime = 0f;
+    private int jumpCount;
+    private float secondJumpTimer;
 
-    void Start()
+    void Awake()
     {
-        body = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
         sr = GetComponentInChildren<SpriteRenderer>();
 
         if (sr == null)
-            Debug.LogError("在 Player 的子物体中找不到 SpriteRenderer");
+            Debug.LogError("Player 子物体中找不到 SpriteRenderer");
+
+        rb.freezeRotation = true;
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
 
         BoxCollider2D col = GetComponent<BoxCollider2D>();
-        PhysicsMaterial2D mat = new PhysicsMaterial2D { friction = 0f, bounciness = 0f };
-        col.sharedMaterial = mat;
-
-        body.freezeRotation = true;
-        body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        col.sharedMaterial = new PhysicsMaterial2D
+        {
+            friction = 0f,
+            bounciness = 0f
+        };
     }
 
     void Update()
     {
         if (Keyboard.current == null) return;
 
-        if (secondJumpTime > 0) secondJumpTime -= Time.deltaTime;
+        // 二段跳时间窗口
+        if (secondJumpTimer > 0)
+            secondJumpTimer -= Time.deltaTime;
 
+        // 跳跃输入
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
-            if (isGrounded)
-            {
-                body.velocity = new Vector2(body.velocity.x, jumpHigh);
-                jumpCount = 1;
-                secondJumpTime = secondJumptime;
-            }
-            else if (jumpCount == 1 && secondJumpTime > 0)
-            {
-                body.velocity = new Vector2(body.velocity.x, jumpHigh);
-                jumpCount = 2;
-                secondJumpTime = 0f;
-            }
+            TryJump();
         }
-        CheckOutOfScreen();
     }
-
-    void CheckOutOfScreen()
-    {
-    Camera cam = Camera.main;
-
-    float camHalfWidth = cam.orthographicSize * Screen.width / Screen.height;
-
-    float leftBorder = cam.transform.position.x - camHalfWidth;
-
-    if (transform.position.x < leftBorder)
-    {
-        Die();
-    }
-    }
-
-    void Die()
-    {
-    Debug.Log("Player Dead");
-    }
-
 
     void FixedUpdate()
     {
         if (Keyboard.current == null) return;
 
+        CheckGrounded();
+        HandleMove();
+        HandleJumpFeel();
+    }
+
+    // =========================
+    // 地面检测（稳定核心）
+    // =========================
+    void CheckGrounded()
+    {
+        bool groundedNow = Physics2D.OverlapBox(
+            groundCheck.position,
+            groundCheckSize,
+            0f,
+            groundLayer
+        );
+
+        if (groundedNow && !isGrounded)
+        {
+            jumpCount = 0;
+        }
+
+        isGrounded = groundedNow;
+    }
+
+    // =========================
+    // 移动 & 翻转
+    // =========================
+    void HandleMove()
+    {
         float move = 0f;
         if (Keyboard.current.aKey.isPressed) move = -1f;
         else if (Keyboard.current.dKey.isPressed) move = 1f;
 
         MoveInput = move;
-        body.velocity = new Vector2(move * moveSpeed, body.velocity.y);
+        rb.velocity = new Vector2(move * moveSpeed, rb.velocity.y);
 
-        // 翻转角色
         if (move > 0.01f)
         {
             sr.flipX = false;
@@ -109,40 +119,68 @@ public class PlayerMovement : MonoBehaviour
             sr.flipX = true;
             FlipFashe(false);
         }
-        // 改善跳跃手感
-        if (body.velocity.y < 0)
+    }
+
+    // =========================
+    // 跳跃逻辑（地面 + 二段）
+    // =========================
+    void TryJump()
+    {
+        if (isGrounded)
         {
-        body.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
+            Jump();
+            jumpCount = 1;
+            secondJumpTimer = secondJumpTimeLimit;
         }
-        else if (body.velocity.y > 0 && !Keyboard.current.spaceKey.isPressed)
+        else if (jumpCount == 1 && secondJumpTimer > 0)
         {
-        body.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.fixedDeltaTime;
+            Jump();
+            jumpCount = 2;
+            secondJumpTimer = 0f;
         }
     }
 
-    // 发射点左右翻转
-    private void FlipFashe(bool facingRight)
+    void Jump()
+    {
+        rb.velocity = new Vector2(rb.velocity.x, jumpHigh);
+    }
+
+    // =========================
+    // 跳跃手感优化
+    // =========================
+    void HandleJumpFeel()
+    {
+        if (rb.velocity.y < 0)
+        {
+            rb.velocity += Vector2.up * Physics2D.gravity.y
+                * (fallMultiplier - 1) * Time.fixedDeltaTime;
+        }
+        else if (rb.velocity.y > 0 && !Keyboard.current.spaceKey.isPressed)
+        {
+            rb.velocity += Vector2.up * Physics2D.gravity.y
+                * (lowJumpMultiplier - 1) * Time.fixedDeltaTime;
+        }
+    }
+
+    // =========================
+    // 发射点翻转
+    // =========================
+    void FlipFashe(bool facingRight)
     {
         if (fashe == null) return;
-        Vector3 localPos = fashe.localPosition;
-        localPos.x = facingRight ? Mathf.Abs(localPos.x) : -Mathf.Abs(localPos.x);
-        fashe.localPosition = localPos;
+
+        Vector3 pos = fashe.localPosition;
+        pos.x = facingRight ? Mathf.Abs(pos.x) : -Mathf.Abs(pos.x);
+        fashe.localPosition = pos;
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    // =========================
+    // 可视化地面检测
+    // =========================
+    void OnDrawGizmosSelected()
     {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = true;
-            jumpCount = 0;
-        }
-    }
-
-    void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = false;
-        }
+        if (groundCheck == null) return;
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(groundCheck.position, groundCheckSize);
     }
 }

@@ -1,0 +1,60 @@
+GameObject 组件
+
+一个能炸裂的物体至少需要以下组件：
+
+SpriteRenderer
+
+显示物体本身的图片。
+
+碎片会基于 Sprite 拆分。
+
+Rigidbody2D
+
+用于碎片飞散时受到物理力影响。
+
+如果父物体本身不受物理控制，也可以不勾选，但碎片需要 Rigidbody2D。
+
+Collider2D（BoxCollider2D、PolygonCollider2D 等）
+
+用于检测子弹碰撞。
+
+父物体可以是任意 2D 碰撞体。
+
+Explodable（脚本）
+
+核心炸裂逻辑：生成碎片、应用力、设置碎片层级。
+
+参数：
+
+shatterType（Triangle 或 Voronoi）
+
+extraPoints（细分点数，控制碎片数量）
+
+subshatterSteps（递归分裂深度）
+
+fragmentLayer、sortingLayerName、orderInLayer（碎片渲染层级）
+
+allowRuntimeFragmentation（是否在运行时生成碎片，通常 Editor 里生成碎片即可）
+
+FragmentAutoDestroy（脚本，可选）
+
+让碎片在一定时间后自动消失，并可渐隐。
+
+参数：
+
+lifeTime（碎片存在时间）
+
+fadeTime（渐隐时间）
+
+
+每个碎片需要：
+
+SpriteRenderer（与父物体同一 Sprite 或拆分部分）
+
+Rigidbody2D（2D 物理效果）
+
+Collider2D（可选，如果希望碎片有碰撞）
+
+FragmentAutoDestroy（可选，保证碎片消失并渐隐）
+
+⚠️ 注意：碎片的 颜色和缩放在炸裂时需要同步父物体，以保证颜色一致、尺寸正常。
