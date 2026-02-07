@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeed = 5f;
 
     [Header("跳跃")]
-    public float jumpHigh = 20f;
+    public float jumpHigh = 25f;
     public float secondJumpTimeLimit = 0.5f;
 
     [Header("Jump Feel")]
