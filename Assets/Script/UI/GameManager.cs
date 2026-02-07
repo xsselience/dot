@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 
     public static event Action OnPlayerDied;
 
-    [Header("ËÀÍöUI")]
+    [Header("ï¿½ï¿½ï¿½ï¿½UI")]
     public GameObject deathUI;
 
     private void Awake()
@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        // ³¡¾°¼ÓÔØÊ±»Øµ÷£¬ÓÃÓÚÖØÐÂ°ó¶¨UI
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â°ï¿½UI
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -30,47 +30,47 @@ public class GameManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    // Ã¿´Î³¡¾°¼ÓÔØ¶¼»áµ÷ÓÃ
+    // Ã¿ï¿½Î³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (deathUI == null)
         {
-            deathUI = GameObject.Find("DeathUI"); // ³¡¾°ÀïËÀÍöUIµÄÃû×Ö
+            deathUI = GameObject.Find("DeathUI"); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½UIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         }
-        // Ö»»Ö¸´ÓÎÏ·ËÙ¶È
+        // Ö»ï¿½Ö¸ï¿½ï¿½ï¿½Ï·ï¿½Ù¶ï¿½
         Time.timeScale = 1f;
-        // ²»ÐÞ¸Ä deathUI
+        // ï¿½ï¿½ï¿½Þ¸ï¿½ deathUI
     }
 
-    // Íæ¼ÒËÀÍö
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public void PlayerDied()
     {
-        Debug.Log("¡¾GM¡¿PlayerDied called");
+        Debug.Log("ï¿½ï¿½GMï¿½ï¿½PlayerDied called");
 
-        // ÔÝÍ£ÓÎÏ·
+        // ï¿½ï¿½Í£ï¿½ï¿½Ï·
         Time.timeScale = 0f;
 
-        // ÏÔÊ¾UI
+        // ï¿½ï¿½Ê¾UI
         if (deathUI != null)
         {
             deathUI.SetActive(true);
         }
 
-        // ´¥·¢ÊÂ¼þ£¨Èç¹ûÓÐÆäËûÏµÍ³¼àÌý£©
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÏµÍ³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         OnPlayerDied?.Invoke();
     }
 
-    // ÖØÐÂ¿ªÊ¼µ±Ç°³¡¾°
+    // ï¿½ï¿½ï¿½Â¿ï¿½Ê¼ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½
     public void RestartGame()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    // ·µ»ØÖ÷²Ëµ¥
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½
     public void BackToMainMenu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("MainMenu"); // ×¢ÒâÌæ»»³ÉÄãÖ÷²Ëµ¥³¡¾°Ãû
+        SceneManager.LoadScene("MainMenu"); // ×¢ï¿½ï¿½ï¿½æ»»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     }
 }
