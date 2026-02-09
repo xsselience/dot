@@ -16,6 +16,10 @@ public class ColorUnlockManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        //测试解锁基础颜色
+        unlockedColors.Add(ColorType.Red);
+        unlockedColors.Add(ColorType.Green);
+        unlockedColors.Add(ColorType.Blue);
     }
 
     // 解锁颜色

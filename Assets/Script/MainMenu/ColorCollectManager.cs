@@ -2,6 +2,7 @@ using UnityEngine;
 
 public static class ColorCollectManager
 {
+    //解锁第二关用的
     public static bool HasOrange
     {
         get => PlayerPrefs.GetInt("HasOrange", 0) == 1;
