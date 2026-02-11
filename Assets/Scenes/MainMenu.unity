@@ -1252,8 +1252,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u7B56\u5212:\nHikari "
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5ba2d2dd5255d26459785a02b6410129, type: 2}
-  m_sharedMaterial: {fileID: -8395097800997118233, guid: 5ba2d2dd5255d26459785a02b6410129, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8e47553e84a1dd948890977d766529d9, type: 2}
+  m_sharedMaterial: {fileID: -1790609550330429638, guid: 8e47553e84a1dd948890977d766529d9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2159,8 +2159,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u753B\u5E08:\n\u56E2\u4E8C\n\u6851\u53F6\u7EFF\n\u5357\u67D3\u541B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5ba2d2dd5255d26459785a02b6410129, type: 2}
-  m_sharedMaterial: {fileID: -8395097800997118233, guid: 5ba2d2dd5255d26459785a02b6410129, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8e47553e84a1dd948890977d766529d9, type: 2}
+  m_sharedMaterial: {fileID: -1790609550330429638, guid: 8e47553e84a1dd948890977d766529d9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2366,10 +2366,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u7A0B\u5E8F:\n\u5C0F\u9971\n\u5C0F\u5B8B"
+  m_text: "\u7A0B\u5E8F:\n\u5C0F\u9971\n"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5ba2d2dd5255d26459785a02b6410129, type: 2}
-  m_sharedMaterial: {fileID: -8395097800997118233, guid: 5ba2d2dd5255d26459785a02b6410129, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8e47553e84a1dd948890977d766529d9, type: 2}
+  m_sharedMaterial: {fileID: -1790609550330429638, guid: 8e47553e84a1dd948890977d766529d9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
