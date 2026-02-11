@@ -3,13 +3,12 @@ using UnityEngine;
 public class ColorPickup : MonoBehaviour
 {
     public ColorType colorType; // 预设颜色
-    private SpriteRenderer sr;
+    public SpriteRenderer fillRenderer;
     private Vector3 startPos;
 
     void Start()
     {
-        sr = GetComponent<SpriteRenderer>();
-        sr.color = GetColor(colorType);
+        fillRenderer.color = GetColor(colorType);
         startPos = transform.position;
     }
 
@@ -33,13 +32,8 @@ public class ColorPickup : MonoBehaviour
         switch (type)
         {
             case ColorType.Red: return Color.red;
-            case ColorType.Green: return Color.green;
-            case ColorType.Blue: return Color.blue;
             case ColorType.Yellow: return Color.yellow;
-            case ColorType.Purple: return new Color(0.5f,0,0.5f);
-            case ColorType.Cyan: return Color.cyan;
-            case ColorType.White: return Color.white;
-            case ColorType.Black: return Color.black;
+            case ColorType.Blue: return Color.blue;
             default: return Color.white;
         }
     }
