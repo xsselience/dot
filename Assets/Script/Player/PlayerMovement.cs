@@ -76,26 +76,67 @@ public class PlayerMovement : MonoBehaviour
         HandleMove();
         HandleJumpFeel();
     }
-    
+
     // 地面检测
     void CheckGrounded()
     {
-        bool groundedNow = Physics2D.OverlapBox(
-            groundCheck.position,
-            groundCheckSize,
-            0f,
-            groundLayer
-        );
+        // 检测 Box 范围内所有碰撞体
+        Collider2D[] hits = Physics2D.OverlapBoxAll(groundCheck.position, groundCheckSize, 0f);
+
+        bool groundedNow = false;
+
+        foreach (var hit in hits)
+        {
+            if (hit == null) continue;
+
+            // 普通地面 Layer
+            if (((1 << hit.gameObject.layer) & groundLayer) != 0)
+            {
+                groundedNow = true;
+                break;
+            }
+
+            // 颜色平台
+            ColorPlatform cp = hit.GetComponent<ColorPlatform>();
+            if (cp != null && hit.enabled)
+            {
+                // 玩家脚底 Y 坐标
+                float playerFeet = groundCheck.position.y;
+                // 平台顶部 Y 坐标
+                float platformTop = hit.bounds.max.y;
+
+                // 玩家脚底在平台上或接触平台，算踩上去
+                if (playerFeet >= platformTop - 0.05f)
+                {
+                    groundedNow = true;
+                    break;
+                }
+            }
+
+            // 其他可踩障碍物
+            if (hit.CompareTag("Obstacle"))
+            {
+                float playerFeet = groundCheck.position.y;
+                float top = hit.bounds.max.y;
+
+                if (playerFeet >= top - 0.05f)
+                {
+                    groundedNow = true;
+                    break;
+                }
+            }
+        }
 
         // 只有从空中落地才重置跳跃次数
         if (groundedNow && !isGrounded)
         {
             jumpCount = 0;
-            secondJumpTimer = 0f; // 二段跳计时器归零
+            secondJumpTimer = 0f;
         }
 
         isGrounded = groundedNow;
     }
+
 
 
 

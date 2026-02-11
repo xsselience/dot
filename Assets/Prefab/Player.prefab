@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 8831356742526366608}
   - component: {fileID: 3045876702811561584}
   - component: {fileID: 6193686651403404355}
+  - component: {fileID: 3165175035255723695}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -151,7 +152,7 @@ MonoBehaviour:
   groundCheckSize: {x: 0.6, y: 0.1}
   groundLayer:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 64
   fashe: {fileID: 3114052130492584778}
 --- !u!114 &5447765490256674889
 MonoBehaviour:
@@ -167,8 +168,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 3072179212778121189, guid: c0d3b1ec958a37d48b830c5cb01dd05a, type: 3}
   bulletSpeed: 10
-  colorType: 6
-  currentColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!222 &8831356742526366608
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -203,6 +202,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a612ed4a4de5abc4f9b14e3804fca26c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3165175035255723695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1016687724662258910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a312b2cb99338314b97b760835285f00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentColor: 0
 --- !u!1 &2199667092272666211
 GameObject:
   m_ObjectHideFlags: 0
@@ -338,7 +350,7 @@ Transform:
   m_GameObject: {fileID: 3816324412061695912}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.96, z: 0}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

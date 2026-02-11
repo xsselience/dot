@@ -19,11 +19,16 @@ public class SceneLoader : MonoBehaviour
     [Header("团队UI")]
     public GameObject teamUIPanel;
 
+    [Header("展示品UI")]
+    public GameObject collectionUIPanel;
+
     void Start()
     {
         // 确保团队面板默认关闭
         if (teamUIPanel != null)
             teamUIPanel.SetActive(false);
+        if (collectionUIPanel != null)
+            collectionUIPanel.SetActive(false);
         RefreshUI();
     }
 
@@ -69,5 +74,15 @@ public class SceneLoader : MonoBehaviour
     public void HideTeamUI()
     {
         teamUIPanel.SetActive(false);
+    }
+
+    public void ShowCollectionUI()
+    {
+        collectionUIPanel.SetActive(true);
+    }
+
+    public void HideCollectionUI()
+    {
+        collectionUIPanel.SetActive(false);
     }
 }

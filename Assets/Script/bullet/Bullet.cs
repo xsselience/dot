@@ -7,32 +7,40 @@ public class Bullet : MonoBehaviour
 
     private SpriteRenderer sr;
 
-    void Start()
+    void Awake()
     {
         sr = GetComponentInChildren<SpriteRenderer>();
-        SetColorFromType(colorType);
+    }
 
+    void Start()
+    {
+        ApplyColor();
         Destroy(gameObject, lifeTime);
     }
 
-    public void SetColorFromType(ColorType type)
+    void ApplyColor()
     {
-        Color color = Color.white;
+        if (sr == null) return;
 
+        sr.color = GetColorByType(colorType);
+    }
+
+    Color GetColorByType(ColorType type)
+    {
         switch (type)
         {
-            case ColorType.Red: color = Color.red; break;
-            case ColorType.Green: color = Color.green; break;
-            case ColorType.Blue: color = Color.blue; break;
-            case ColorType.Yellow: color = Color.yellow; break;
-            case ColorType.Purple: color = new Color(0.5f, 0f, 0.5f); break;
-            case ColorType.Cyan: color = Color.cyan; break;
-            case ColorType.White: color = Color.white; break;
-            case ColorType.Black: color = Color.black; break;
-        }
+            case ColorType.Red:
+                return Color.red;
 
-        if (sr != null)
-            sr.color = color;
+            case ColorType.Yellow:
+                return Color.yellow;
+
+            case ColorType.Blue:
+                return Color.blue;
+
+            default:
+                return Color.white;
+        }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -43,5 +51,4 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    
 }

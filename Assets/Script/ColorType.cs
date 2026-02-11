@@ -1,12 +1,11 @@
 // ColorType.cs
 public enum ColorType
 {
-    Red,
+    Orange,
     Green,
+    Purple,
+    Red,
+    Yellow,
     Blue,
-    Yellow,  // Red + Green
-    Purple,  // Red + Blue
-    Cyan,    // Green + Blue
-    White,
     Black
 }

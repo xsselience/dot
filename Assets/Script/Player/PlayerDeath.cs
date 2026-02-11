@@ -11,15 +11,24 @@ public class PlayerDeath : MonoBehaviour
         if (collision.gameObject.CompareTag("Obstacle") ||
             collision.gameObject.CompareTag("Enemy"))
         {
+            foreach (ContactPoint2D contact in collision.contacts)
+            {
+                // 玩家在上方
+                if (contact.normal.y > 0.5f)
+                {
+                    return; // 从上面踩，不死
+                }
+            }
+
             Die();
         }
     }
 
     void Die()
     {
+        if (isDead) return;
         isDead = true;
 
-        // ֪ͨ GameManager
         GameManager.Instance.PlayerDied();
     }
 }

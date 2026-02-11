@@ -6,7 +6,6 @@ TagManager:
   tags:
   - Ground
   - Obstacle
-  - ground
   - BombPickup
   - Enemy
   - ExplosionFX
