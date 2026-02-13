@@ -25,15 +25,7 @@ public class SceneLoader : MonoBehaviour
     }
     public void StartLevel1()
     {
-        SceneManager.LoadScene("Level1");
-    }
-
-    public void StartLevel2()
-    {
-        if (!ColorCollectManager.AllCollected())
-            return;
-
-        SceneManager.LoadScene("Level2");
+        SceneManager.LoadScene("undergrounddialogue");
     }
 
     public void QuitGame()

@@ -26,8 +26,8 @@ Transform:
   m_GameObject: {fileID: 2221768023930325434}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0287, y: -0.0476, z: 0}
-  m_LocalScale: {x: 5.4903493, y: 7.213708, z: 1}
+  m_LocalPosition: {x: -0.0378, y: -0.0476, z: 0}
+  m_LocalScale: {x: 5.8934283, y: 7.213708, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 457137466649885146}
@@ -196,7 +196,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5511405539061508701}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 106.11, y: 18, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -304,7 +304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7dd6ccaca9930a4db8731a9ca759c07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colorType: 0
+  colorType: 4
   fillRenderer: {fileID: 6842311863787895198}
 --- !u!50 &7601126003836243371
 Rigidbody2D:

@@ -1,6 +1,8 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class DialogueSystem : MonoBehaviour
 {
@@ -15,10 +17,15 @@ public class DialogueSystem : MonoBehaviour
     {
         Left,
         Right,
-        Other   // 路人或心理
+        Other
     }
 
     public SpeakerType[] speakerType;
+
+    [Header("场景跳转")]
+    public string nextSceneName;
+    public Image fadePanel;
+    public float fadeSpeed = 2f;
 
     private int index = 0;
 
@@ -39,7 +46,7 @@ public class DialogueSystem : MonoBehaviour
             }
             else
             {
-                Debug.Log("对话结束");
+                StartCoroutine(FadeAndLoadScene());
             }
         }
     }
@@ -48,7 +55,6 @@ public class DialogueSystem : MonoBehaviour
     {
         dialogueText.text = sentences[index];
 
-        // 先全部变暗
         leftCharacter.color = Color.gray;
         rightCharacter.color = Color.gray;
 
@@ -60,6 +66,20 @@ public class DialogueSystem : MonoBehaviour
         {
             rightCharacter.color = Color.white;
         }
-        // Other 不做任何高亮
+    }
+
+    IEnumerator FadeAndLoadScene()
+    {
+        Color color = fadePanel.color;
+
+        // 淡出（变黑）
+        while (color.a < 1)
+        {
+            color.a += Time.deltaTime * fadeSpeed;
+            fadePanel.color = color;
+            yield return null;
+        }
+
+        SceneManager.LoadScene(nextSceneName);
     }
 }

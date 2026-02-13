@@ -10,6 +10,8 @@ public class PlayerShoot : MonoBehaviour
     private PlayerMovement playerMovement;
     private PlayerAmmo playerAmmo;
 
+    [Header("音效")]
+    public AudioClip shootClip; // 射击音效
     void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
@@ -24,6 +26,7 @@ public class PlayerShoot : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale == 0f) return;
         if (Mouse.current == null) return;
 
         if (Mouse.current.leftButton.wasPressedThisFrame)
@@ -68,8 +71,12 @@ public class PlayerShoot : MonoBehaviour
         Bullet bulletScript = bullet.GetComponent<Bullet>();
         if (bulletScript != null)
         {
-            bulletScript.colorType = color;
+            bulletScript.Initialize(color);
         }
+
+        // 播放射击音效
+        if (shootClip != null)
+            AudioManager.Instance.PlaySFX(shootClip);
 
         // ⑧ 子弹朝向
         float angle = Mathf.Atan2(shootDir.y, shootDir.x) * Mathf.Rad2Deg;

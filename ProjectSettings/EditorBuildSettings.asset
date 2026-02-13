@@ -11,4 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Level1.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/undergrounddialogue.unity
+    guid: d4b14c3d22a5fb04d932cd89af59bff1
+  - enabled: 1
+    path: Assets/Scenes/Enddialogue.unity
+    guid: 89ce93796e729d94790a33fdeeb053b3
   m_configObjects: {}

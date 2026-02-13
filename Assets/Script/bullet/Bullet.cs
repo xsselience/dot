@@ -6,49 +6,46 @@ public class Bullet : MonoBehaviour
     public ColorType colorType;
     public float lifeTime = 2f;
 
+    [Header("Animator Controllers")]
+    public RuntimeAnimatorController redController;
+    public RuntimeAnimatorController yellowController;
+    public RuntimeAnimatorController blueController;
+
     private Animator animator;
-    private SpriteRenderer sr;
 
     void Awake()
     {
-        sr = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponent<Animator>();
     }
 
     void Start()
     {
-        ApplyAnimation();
         Destroy(gameObject, lifeTime);
     }
 
     void ApplyAnimation()
     {
-        if (animator == null) return;
-
-        RuntimeAnimatorController controller = null;
-
-        // 根据颜色选择 Animator Controller
         switch (colorType)
         {
             case ColorType.Red:
-                controller = Resources.Load<RuntimeAnimatorController>("Animation/BulletRed");
+                animator.runtimeAnimatorController = redController;
                 break;
 
             case ColorType.Yellow:
-                controller = Resources.Load<RuntimeAnimatorController>("Animation/BulletYellow");
+                animator.runtimeAnimatorController = yellowController;
                 break;
 
             case ColorType.Blue:
-                controller = Resources.Load<RuntimeAnimatorController>("Animation/BulletBlue");
+                animator.runtimeAnimatorController = blueController;
                 break;
         }
-
-        if (controller != null)
-        {
-            animator.runtimeAnimatorController = controller;
-        }
     }
-
+    public void Initialize(ColorType type)
+    {
+        colorType = type;
+        ApplyAnimation();
+        Destroy(gameObject, lifeTime);
+    }
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground") ||

@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections; 
+
 
 [RequireComponent(typeof(Rigidbody2D), typeof(BoxCollider2D))]
 public class PlayerMovement : MonoBehaviour
@@ -23,6 +25,12 @@ public class PlayerMovement : MonoBehaviour
     [Header("发射点")]
     public Transform fashe;
 
+    [Header("音效")]
+    public AudioClip footstepClip;
+    public AudioClip firstJumpClip;
+    public AudioClip secondJumpClip;
+    private AudioSource footstepSource;
+
     public bool IsGrounded => isGrounded;
     public bool FaceRight => sr != null ? !sr.flipX : true;
     public float MoveInput { get; private set; }
@@ -33,6 +41,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isGrounded;
     private int jumpCount;
     private float secondJumpTimer;
+
 
     void Awake()
     {
@@ -51,10 +60,20 @@ public class PlayerMovement : MonoBehaviour
             friction = 0f,
             bounciness = 0f
         };
+        // 初始化脚步音 AudioSource
+        if (footstepClip != null)
+        {
+            footstepSource = gameObject.AddComponent<AudioSource>();
+            footstepSource.clip = footstepClip;
+            footstepSource.loop = true;          // 循环播放
+            footstepSource.playOnAwake = false;  // 不自动播放
+            footstepSource.volume = 2f;        // 可调节
+        }
     }
 
     void Update()
     {
+        if (Time.timeScale == 0f) return;   // 新增
         if (Keyboard.current == null) return;
 
         // 二段跳时间窗口
@@ -137,10 +156,6 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = groundedNow;
     }
 
-
-
-
-    // 移动  翻转
     void HandleMove()
     {
         float move = 0f;
@@ -150,17 +165,29 @@ public class PlayerMovement : MonoBehaviour
         MoveInput = move;
         rb.velocity = new Vector2(move * moveSpeed, rb.velocity.y);
 
-        if (move > 0.01f)
+        // 翻转
+        if (sr != null)
         {
-            sr.flipX = false;
-            FlipFashe(true);
+            if (move > 0.01f) { sr.flipX = false; FlipFashe(true); }
+            else if (move < -0.01f) { sr.flipX = true; FlipFashe(false); }
         }
-        else if (move < -0.01f)
+
+        // 播放/停止脚步音
+        if (footstepSource != null)
         {
-            sr.flipX = true;
-            FlipFashe(false);
+            if (move != 0 && isGrounded)
+            {
+                if (!footstepSource.isPlaying)
+                    footstepSource.Play();
+            }
+            else
+            {
+                if (footstepSource.isPlaying)
+                    footstepSource.Stop();
+            }
         }
     }
+
 
     // 跳跃逻辑（地面 + 二段）
     void TryJump()
@@ -170,12 +197,16 @@ public class PlayerMovement : MonoBehaviour
             Jump();
             jumpCount = 1;               // 第一次跳
             secondJumpTimer = secondJumpTimeLimit; // 二段跳时间窗口
+            if (firstJumpClip != null)
+                AudioManager.Instance.PlaySFX(firstJumpClip);
         }
         else if (jumpCount == 1 && secondJumpTimer > 0f)
         {
             Jump();
             jumpCount = 2;               // 二段跳完成
             secondJumpTimer = 0f;        // 禁止再次跳
+            if (secondJumpClip != null)
+                AudioManager.Instance.PlaySFX(secondJumpClip);
         }
         // 其他情况不能跳
     }

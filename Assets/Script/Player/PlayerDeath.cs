@@ -3,6 +3,8 @@ using UnityEngine;
 public class PlayerDeath : MonoBehaviour
 {
     private bool isDead = false;
+    [Header("GameManager 引用")]
+    public GameManager gameManager; // 在 Inspector 挂入
 
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -25,7 +27,9 @@ public class PlayerDeath : MonoBehaviour
     {
         if (isDead) return;
         isDead = true;
-
-        GameManager.Instance.PlayerDied();
+        if (gameManager != null)
+            gameManager.PlayerDied();
+        else
+            Debug.LogWarning("PlayerDeath: GameManager 未挂载！");
     }
 }

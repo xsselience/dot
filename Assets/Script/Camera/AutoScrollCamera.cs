@@ -14,6 +14,9 @@ public class AutoScrollCamera : MonoBehaviour
     public float yOffset = 2f;
     public float ySmooth = 3f;
 
+    [Header("GameManager引用")]
+    public GameManager gameManager; // 挂在 Inspector
+
     private float currentY;
     private float cameraX; // 相机“世界进度”
 
@@ -21,6 +24,10 @@ public class AutoScrollCamera : MonoBehaviour
 
     void Start()
     {
+        // 查找场景中的 GameManager
+        gameManager = FindObjectOfType<GameManager>();
+        if (gameManager == null)
+            Debug.LogError("PlayerDeath: 场景中找不到 GameManager！");
         currentY = transform.position.y;
         cameraX = transform.position.x;
     }
@@ -61,7 +68,10 @@ public class AutoScrollCamera : MonoBehaviour
 
         if (player.position.x < leftBorder)
         {
-            GameManager.Instance.PlayerDied();
+            if (gameManager != null)
+            {
+                gameManager.PlayerDied();
+            }
         }
     }
 

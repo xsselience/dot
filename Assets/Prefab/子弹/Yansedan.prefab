@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2404059690625786342}
   - component: {fileID: 6287000855362606726}
   - component: {fileID: 2056263337583565498}
+  - component: {fileID: 7696629412340842633}
   m_Layer: 0
   m_Name: Yansedan
   m_TagString: Untagged
@@ -30,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.99, y: 0.82, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 0.8008626, y: 0.8008626, z: 0.8008626}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -163,3 +164,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colorType: 0
   lifeTime: 3
+  redController: {fileID: 9100000, guid: 45f6865ce7dd61148b23a68b2eac9efb, type: 2}
+  yellowController: {fileID: 9100000, guid: 5d9b3fef38ce63842b81e55df45c9750, type: 2}
+  blueController: {fileID: 9100000, guid: 53af403d77bbaf144999a967f7c9dafb, type: 2}
+--- !u!95 &7696629412340842633
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3072179212778121189}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

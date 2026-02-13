@@ -4,73 +4,66 @@ using System;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance;
-
+    // 玩家死亡事件（依然可以被其他脚本订阅）
     public static event Action OnPlayerDied;
 
-    [Header("����UI")]
+    [Header("死亡UI")]
     public GameObject deathUI;
 
     private void Awake()
     {
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
+        // 确保 deathUI 引用
+        if (deathUI == null)
+            deathUI = GameObject.Find("DeathUI");
+    }
 
-        // ��������ʱ�ص����������°�UI
+    private void OnEnable()
+    {
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    // ÿ�γ������ض������
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        // 每次场景加载都重新找 deathUI
         if (deathUI == null)
         {
-            deathUI = GameObject.Find("DeathUI"); // ����������UI������
+            deathUI = GameObject.Find("DeathUI");
         }
-        // ֻ�ָ���Ϸ�ٶ�
+
         Time.timeScale = 1f;
-        // ���޸� deathUI
     }
 
-    // �������
+    // 玩家死亡
     public void PlayerDied()
     {
-        Debug.Log("��GM��PlayerDied called");
+        Debug.Log("GameManager PlayerDied called");
 
-        // ��ͣ��Ϸ
         Time.timeScale = 0f;
 
-        // ��ʾUI
         if (deathUI != null)
         {
             deathUI.SetActive(true);
         }
 
-        // �����¼������������ϵͳ������
         OnPlayerDied?.Invoke();
     }
 
-    // ���¿�ʼ��ǰ����
+    // 重启本关
     public void RestartGame()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    // �������˵�
+    // 返回主菜单
     public void BackToMainMenu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("MainMenu"); // ע���滻�������˵�������
+        SceneManager.LoadScene("MainMenu");
     }
 }

@@ -10,6 +10,10 @@ public class Obstacle : MonoBehaviour
 
     private HashSet<ColorType> hitColors = new HashSet<ColorType>();
 
+
+    [Header("破碎音效")] // 新增
+    public AudioClip destroyClip;
+
     void Start()
     {
         explodable = GetComponent<Explodable>();
@@ -88,6 +92,12 @@ public class Obstacle : MonoBehaviour
     {
         if (isDestroyed) return;
         isDestroyed = true;
+
+        // 播放破碎音效
+        if (destroyClip != null)
+        {
+            AudioManager.Instance.PlaySFX(destroyClip);
+        }
 
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         if (rb != null)
