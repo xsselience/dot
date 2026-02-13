@@ -10,8 +10,7 @@ public class Obstacle : MonoBehaviour
 
     private HashSet<ColorType> hitColors = new HashSet<ColorType>();
 
-
-    [Header("破碎音效")] // 新增
+    [Header("破碎音效")]
     public AudioClip destroyClip;
 
     void Start()
@@ -27,10 +26,8 @@ public class Obstacle : MonoBehaviour
         if (bullet == null) return;
 
         ColorType bulletColor = bullet.colorType;
-
         Destroy(collision.gameObject);
 
-        // 黑色无效
         if (bulletColor == ColorType.Black)
             return;
 
@@ -38,25 +35,25 @@ public class Obstacle : MonoBehaviour
         if (IsPrimary(colorType))
         {
             if (bulletColor == colorType)
-            {
                 DestroyBlock();
-            }
             return;
         }
 
         // ===== 混合色障碍物 =====
+        ColorType[] requiredColors = GetRequiredColors(colorType);
+        if (requiredColors == null) return;
 
-        if (!IsPrimary(bulletColor))
-            return;
-
-        hitColors.Add(bulletColor);
+        // 只记录必要的颜色
+        if (System.Array.Exists(requiredColors, c => c == bulletColor))
+        {
+            hitColors.Add(bulletColor);
+        }
 
         if (CanDestroyMix())
-        {
             DestroyBlock();
-        }
     }
 
+    // 判断是否为基础色
     bool IsPrimary(ColorType type)
     {
         return type == ColorType.Red ||
@@ -64,30 +61,28 @@ public class Obstacle : MonoBehaviour
                type == ColorType.Blue;
     }
 
-    bool CanDestroyMix()
+    // 获取混合色障碍物所需原色
+    ColorType[] GetRequiredColors(ColorType mix)
     {
-        if (hitColors.Count != 2)
-            return false;
-
-        switch (colorType)
+        switch (mix)
         {
-            case ColorType.Orange:
-                return hitColors.SetEquals(
-                    new HashSet<ColorType> { ColorType.Red, ColorType.Yellow });
-
-            case ColorType.Green:
-                return hitColors.SetEquals(
-                    new HashSet<ColorType> { ColorType.Yellow, ColorType.Blue });
-
-            case ColorType.Purple:
-                return hitColors.SetEquals(
-                    new HashSet<ColorType> { ColorType.Red, ColorType.Blue });
-
-            default:
-                return false;
+            case ColorType.Orange: return new ColorType[] { ColorType.Red, ColorType.Yellow };
+            case ColorType.Green: return new ColorType[] { ColorType.Yellow, ColorType.Blue };
+            case ColorType.Purple: return new ColorType[] { ColorType.Red, ColorType.Blue };
+            default: return null;
         }
     }
 
+    // 判断混合色障碍物是否满足破坏条件
+    bool CanDestroyMix()
+    {
+        ColorType[] requiredColors = GetRequiredColors(colorType);
+        if (requiredColors == null) return false;
+
+        return hitColors.SetEquals(new HashSet<ColorType>(requiredColors));
+    }
+
+    // 障碍物破坏逻辑
     void DestroyBlock()
     {
         if (isDestroyed) return;
@@ -99,6 +94,7 @@ public class Obstacle : MonoBehaviour
             AudioManager.Instance.PlaySFX(destroyClip);
         }
 
+        // 关闭刚体和碰撞
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         if (rb != null)
             rb.simulated = false;
@@ -107,6 +103,7 @@ public class Obstacle : MonoBehaviour
         if (col != null)
             col.enabled = false;
 
+        // 爆裂碎片
         if (explodable != null)
         {
             if (explodable.fragments.Count == 0)
@@ -131,5 +128,22 @@ public class Obstacle : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    // 可选：重置障碍物时清空记录
+    public void ResetObstacle()
+    {
+        isDestroyed = false;
+        hitColors.Clear();
+
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
+            rb.simulated = true;
+
+        Collider2D col = GetComponent<Collider2D>();
+        if (col != null)
+            col.enabled = true;
+
+        gameObject.SetActive(true);
     }
 }
